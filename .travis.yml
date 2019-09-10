@@ -19,7 +19,7 @@ script:
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-  - cd /home/travis/build/upokusaev/frontend-project-lvl2/
+  - cd /home/travis/build/upokusaev/frontend-project-lvl2/coverage/
   - ls -al
-  - cd coverage/
+  - cd /home/travis/build/upokusaev/frontend-project-lvl2/cc-test-reporter
   - ls -al
