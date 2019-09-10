@@ -9,17 +9,11 @@ node_js:
 
 before_script:
   - make build
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +rwx ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - npm install --save-dev codeclimate-test-reporter
 
 script:
   - make test
   - make lint
 
 after_script:
-  - /home/travis/build/upokusaev/frontend-project-lvl2/cc-test-reported format-coverage -o coverage/codeclimate.json
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-  - /home/travis/build/upokusaev/frontend-project-lvl2/cc-test-reporter upload-coverage
-  - cd /home/travis/build/upokusaev/frontend-project-lvl2/
-  - ls -al
+  - codeclimate-test-reporter < ./coverage/lcov.info
