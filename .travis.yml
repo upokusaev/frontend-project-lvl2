@@ -1,8 +1,11 @@
 ---
+env:
+  global:
+    - CC_TEST_REPORTER_ID=726714815d0585061fe1d559efdda27da342136aa38d4778d3476b337851b18d
 
 language: node_js
 node_js:
-  - node
+  - 12.10.0
 
 script:
   - make lint
