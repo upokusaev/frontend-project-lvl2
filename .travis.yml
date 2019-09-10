@@ -18,7 +18,7 @@ script:
   - make lint
 
 after_script:
-  - ./cc-test-reported format-coverage -o coverage/codeclimate.json
+  - /home/travis/build/upokusaev/frontend-project-lvl2/cc-test-reported format-coverage -o coverage/codeclimate.json
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
   - /home/travis/build/upokusaev/frontend-project-lvl2/cc-test-reporter upload-coverage
   - cd /home/travis/build/upokusaev/frontend-project-lvl2/
