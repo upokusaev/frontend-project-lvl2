@@ -8,14 +8,16 @@ node_js:
   - 12.10.0
 
 before_script:
+  - make build
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
 script:
-  - make build
   - make test
   - make lint
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter sum-coverage -o coverage/coverage.total.json coverage/coverage.*.json;
+  - ./cc-test-reporter upload-coverage -i coverage/coverage.total.json;
