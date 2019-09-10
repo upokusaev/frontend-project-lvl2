@@ -4,6 +4,7 @@
   "description": "Hexlet project",
   "main": "dist/index.js",
   "scripts": {
+    "pretest": "npm run build",
     "test": "jest",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run build"
@@ -44,6 +45,7 @@
   },
   "dependencies": {
     "commander": "^3.0.1",
+    "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "source-map-support": "^0.5.13"
   }
