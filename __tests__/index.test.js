@@ -12,3 +12,9 @@ test('yaml', () => {
   const strResult = fs.readFileSync(pathResult, 'ascii');
   expect(genDiff('__tests__/__fixtures__/before.yml', '__tests__/__fixtures__/after.yml')).toBe(strResult);
 });
+
+test('ini', () => {
+  const pathResult = '__tests__/__fixtures__/result';
+  const strResult = fs.readFileSync(pathResult, 'ascii');
+  expect(genDiff('__tests__/__fixtures__/before.ini', '__tests__/__fixtures__/after.ini')).toBe(strResult);
+});
