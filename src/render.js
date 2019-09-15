@@ -1,33 +1,18 @@
-const f = [
-  {
-    mod: 'removed',
-    prefix: '  - ',
-    value: (obj) => obj['prevValue'],
-  },
-  {
-    mod: 'added',
-    prefix: '  + ',
-    value: (obj) => obj['newValue'],
-  },
-  {
-    mod: 'notСhanged',
-    prefix: '    ',
-    value: (obj) => obj['newValue'],
-  },
-  {
-    mod: 'changed',
-    prefix: ['  + ', '  - '],
-    value: (obj) => [obj['newValue'], obj['prevValue']],
-  }
-];
-
 const tab = '    ';
+
 const getPrefix = (obj) => {
-  if (obj['mod'] === 'removed') return '  - ';
-  if (obj['mod'] === 'added') return '  + ';
-  if (obj['mod'] === 'notСhanged') return '    ';
-  if (obj['mod'] === 'changed') return ['  - ', '  + '];
-}
+  switch (obj['mod']) {
+    case 'removed':
+      return '  - ';
+    case 'added':
+      return '  + ';
+    case 'notСhanged':
+      return '    ';
+    case 'changed':
+      return ['  - ', '  + '];
+    default: '    ';
+  }
+};
 
 const renderObj = (obj, level) => {
   const keys = Object.keys(obj);

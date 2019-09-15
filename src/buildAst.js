@@ -35,15 +35,16 @@ const transformObjects = [
     getValue: (obj1, obj2, key) => obj2[key],
   },
   {
-    mod: 'changed',
-    check: (obj1, obj2) => (typeof obj1 !== typeof obj2),
-    getValue: (obj1, obj2, key) => [obj1[key], obj2[key]],
-  },
-  {
     mod: 'notСhanged',
-    check: (obj1, obj2) => (obj1 instanceof Object && obj2 instanceof Object),
+    check: (obj1, obj2, key) => ((_.isObject(obj1) && _.isObject(obj1)) || (obj1[key] === obj2[key])),
     getValue: (obj1, obj2, key) => null,
   },
+  {
+    mod: 'changed',
+    check: (obj1, obj2) => (obj1[key] !== obj2[key]),
+    getValue: (obj1, obj2, key) => [obj1[key], obj2[key]],
+  },
+
 ];
 
 const getMod = (obj1, obj2, key) => {
@@ -56,12 +57,10 @@ const buildAst = (before, after) => {
   const uniqKeys = Array.from(new Set(keys)).sort();
   const ast = uniqKeys.map((key) => {
     const name = key;
-    // const newValue = after[key];
-    // const prevValue = before[key];
-    const child = (_.isObject(before[key]) && _.isObject(after[key])) ? [before[key], after[key]] : null;
+    const children = (_.isObject(before[key]) && _.isObject(after[key])) ? buildAst(before[key], after[key]) : null;
     const { mod, getValue } = getMod(before, after, key);
     const value = getValue(before, after, key);
-    return { name, value, mod, children: (child ? buildAst(child[0], child[1]) : null) };
+    return { name, value, mod, children };
   });
   return ast;
 };
