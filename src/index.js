@@ -10,6 +10,8 @@ const geRenderFunction = (format) => {
       return renderPlain;
     case 'json':
       return renderJson;
+    case 'custom':
+      return renderCustomString;
     default:
       return renderCustomString;
   }
