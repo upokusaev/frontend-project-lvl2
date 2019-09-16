@@ -10,8 +10,6 @@ const geRenderFunction = (format) => {
       return renderPlain;
     case 'json':
       return renderJson;
-    case 'custom':
-      return renderCustomString;
     default:
       return renderCustomString;
   }
@@ -22,8 +20,6 @@ const genDiff = (pathFile1, pathFile2, format) => {
   const obj2 = parse(pathFile2);
   const diff = buildAst(obj1, obj2);
   const render = geRenderFunction(format);
-  // console.log(diff);
-  // console.log(renderJson(diff));
   return render(diff);
 };
 
