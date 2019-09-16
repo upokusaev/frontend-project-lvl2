@@ -16,10 +16,6 @@ const renderObj = (obj, level) => {
 };
 
 const getValue = (value, level, prefix) => {
-  if (value instanceof Array) {
-    const [value1, value2] = [getValue(value[0], level), getValue(value[1], level)];
-    return `${tab.repeat(level)}${prefix[0]}${obj.name}: ${value1}\n${tab.repeat(level)}${prefix[1]}${obj.name}: ${value2}`;
-  }
   if (value instanceof Object) return renderObj(value, level + 1);
   return value;
 };
