@@ -15,7 +15,7 @@ const renderObj = (obj, level) => {
   return `{\n${res.join('\n')}\n${tab.repeat(level)}}`;
 };
 
-const getValue = (value, level, prefix) => {
+const getValue = (value, level) => {
   if (value instanceof Object) return renderObj(value, level + 1);
   return value;
 };
