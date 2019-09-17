@@ -13,10 +13,10 @@ const render = (diff) => {
   const res = Object.keys(diff).map((key) => {
     const obj = diff[key];
     const name = `"name": "${obj.name}"`;
-    const mod = `"mod": "${obj.mod}"`;
+    const type = `"type": "${obj.type}"`;
     const value = getValue(obj.value);
     const children = (obj.children) ? `"children": ${render(obj.children)}` : '"children": ""';
-    return (obj.children) ? `{ ${name}, ${mod}, ${value}, ${children} }` : `{ ${name}, ${mod}, ${children}, ${value} }`;
+    return (obj.children) ? `{ ${name}, ${type}, ${value}, ${children} }` : `{ ${name}, ${type}, ${children}, ${value} }`;
   });
   return `[${res.join(',')}]`;
 };
