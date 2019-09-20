@@ -1,8 +1,8 @@
 import parse from './parsers';
 import buildAst from './buildAst';
-import renderCustomString from './renderCustomString';
-import renderJson from './renderJson';
-import renderPlain from './renderPlain';
+import renderCustomString from './formatters/renderCustomString';
+import renderJson from './formatters/renderJson';
+import renderPlain from './formatters/renderPlain';
 
 const geRenderFunction = (format) => {
   switch (format) {
