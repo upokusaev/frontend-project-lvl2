@@ -4,11 +4,15 @@ import path from 'path';
 import ini from 'ini';
 
 const funcList = {
-  json: (pathFile) => JSON.parse(fs.readFileSync(pathFile, 'ascii')),
-  yml: (pathFile) => yaml.load(fs.readFileSync(pathFile, 'ascii')),
-  ini: (pathFile) => ini.parse(fs.readFileSync(pathFile, 'ascii')),
+  json: (filePath) => JSON.parse(fs.readFileSync(filePath, 'ascii')),
+  yml: (filePath) => yaml.load(fs.readFileSync(filePath, 'ascii')),
+  ini: (filePath) => ini.parse(fs.readFileSync(filePath, 'ascii')),
 };
 
-const parse = (filePath) => funcList[path.extname(filePath).slice(1)](filePath);
+
+const parse = (filePath) => {
+  const parseFunc = funcList[path.extname(filePath).slice(1)];
+  return parseFunc(filePath);
+};
 
 export default parse;
