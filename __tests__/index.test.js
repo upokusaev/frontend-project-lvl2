@@ -1,19 +1,19 @@
 import _ from 'lodash';
 import fs from 'fs';
-import genDiff from '../dist';
+import genDiff from '../src';
 
 const path = `${__dirname}/__fixtures__`;
 
 test.each([
-  ['json', 'deep', 'custom'], ['json', 'flat', 'plain'],
-  ['yml', 'deep', 'json'], ['yml', 'flat', 'custom'],
-  ['ini', 'deep', 'plain'], ['ini', 'flat', 'json']])(
-  '%s-%s to %s format',
-  (exp, type, format = '') => {
+  ['json', 'custom'], ['json', 'plain'], ['json', 'json'],
+  ['yml', 'custom'], ['yml', 'plain'], ['yml', 'json'],
+  ['ini', 'custom'], ['ini', 'plain'], ['ini', 'json']])(
+  'Comparison of .%s files. Output to "%s" format',
+  (exp, format = '') => {
     const capitalizeFormat = _.capitalize(format);
-    const before = `${path}/${type}/before.${exp}`;
-    const after = `${path}/${type}/after.${exp}`;
-    const expected = fs.readFileSync(`${path}/${type}/result${capitalizeFormat}`, 'ascii');
+    const before = `${path}/before.${exp}`;
+    const after = `${path}/after.${exp}`;
+    const expected = fs.readFileSync(`${path}/result${capitalizeFormat}`, 'ascii');
     expect(genDiff(before, after, format)).toBe(expected);
   },
 );
