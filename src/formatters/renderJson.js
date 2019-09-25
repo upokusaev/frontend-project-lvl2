@@ -1,12 +1,16 @@
-const expandValue = (obj) => {
-  const res = Object.keys(obj).map((key) => `"${key}": "${obj[key]}"`);
-  return `{ ${res.join(', ')} }`;
+const expandValue = (value) => {
+  if (value instanceof Object) {
+    const obj = value;
+    const res = Object.keys(obj).map((key) => `"${key}": "${obj[key]}"`);
+    return `{ ${res.join(', ')} }`;
+  }
+  return (value === null) ? '""' : `"${value}"`;
 };
 
-const getValue = (value) => {
-  if (value instanceof Array) return `"value": [ {${getValue(value[0])}}, {${getValue(value[1])}} ]`;
-  if (value instanceof Object) return `"value": ${expandValue(value)}`;
-  return (value === null) ? '"value": ""' : `"value": "${value}"`;
+const getValue = (obj) => {
+  if (obj.type === 'updated') return `"value": ${expandValue(obj.value)}, "oldValue": ${expandValue(obj.oldValue)} `;
+  const value = (obj.type === 'removed') ? obj.oldValue : obj.value;
+  return `"value": ${expandValue(value)}`;
 };
 
 const render = (diff) => {
@@ -14,7 +18,7 @@ const render = (diff) => {
     const obj = diff[key];
     const name = `"name": "${obj.name}"`;
     const type = `"type": "${obj.type}"`;
-    const value = getValue(obj.value);
+    const value = getValue(obj);
     const children = (obj.children) ? `"children": ${render(obj.children)}` : '"children": ""';
     return (obj.children) ? `{ ${name}, ${type}, ${value}, ${children} }` : `{ ${name}, ${type}, ${children}, ${value} }`;
   });

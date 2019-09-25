@@ -1,8 +1,10 @@
+import _ from 'lodash';
+
 const getPrefix = (obj) => {
   switch (obj.type) {
     case 'removed': return '  - ';
     case 'added': return '  + ';
-    case 'updated': return ['  - ', '  + '];
+    case 'updated': return ['  + ', '  - '];
     default: return '    ';
   }
 };
@@ -24,7 +26,13 @@ const render = (diff, level = 0) => {
     const prefix = getPrefix(obj);
     const startStr = `${tab.repeat(level)}${prefix}${obj.name}: `;
     if (obj.type === 'nested') return `${startStr}${render(obj.children, level + 1)}`;
-    if (obj.type === 'updated') return obj.value.map((value, i) => `${tab.repeat(level)}${prefix[i]}${obj.name}: ${getValue(value, level)}`).join('\n');
+    if (obj.type === 'updated') {
+      const arrValues = [obj.value, obj.oldValue];
+      const arrStr = arrValues.map((value, i) => `${tab.repeat(level)}${prefix[i]}${obj.name}: ${getValue(value, level)}`);
+      return _.reverse(arrStr).join('\n');
+    }
+    if (obj.type === 'removed') return `${startStr}${getValue(obj.oldValue, level, prefix)}`;
+    if (obj.type === 'added') return `${startStr}${getValue(obj.value, level, prefix)}`;
     return `${startStr}${getValue(obj.value, level, prefix)}`;
   });
 
