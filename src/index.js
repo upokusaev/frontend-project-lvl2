@@ -1,19 +1,6 @@
 import parse from './parsers';
 import buildAst from './buildAst';
-import renderCustomString from './formatters/renderCustomString';
-import renderJson from './formatters/renderJson';
-import renderPlain from './formatters/renderPlain';
-
-const geRenderFunction = (format) => {
-  switch (format) {
-    case 'plain':
-      return renderPlain;
-    case 'json':
-      return renderJson;
-    default:
-      return renderCustomString;
-  }
-};
+import geRenderFunction from './formatters/index';
 
 const genDiff = (pathFile1, pathFile2, format) => {
   const obj1 = parse(pathFile1);
