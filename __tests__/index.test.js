@@ -13,7 +13,7 @@ test.each([
     const capitalizeFormat = _.capitalize(format);
     const before = `${path}/before.${exp}`;
     const after = `${path}/after.${exp}`;
-    const expected = fs.readFileSync(`${path}/result${capitalizeFormat}`, 'ascii');
+    const expected = fs.readFileSync(`${path}/result${capitalizeFormat}`, 'utf-8');
     expect(genDiff(before, after, format)).toBe(expected);
   },
 );
