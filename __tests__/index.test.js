@@ -5,9 +5,9 @@ import genDiff from '../src';
 const path = `${__dirname}/__fixtures__`;
 
 test.each([
-  ['json', 'custom'], ['json', 'plain'], ['json', 'json'],
-  ['yml', 'custom'], ['yml', 'plain'], ['yml', 'json'],
-  ['ini', 'custom'], ['ini', 'plain'], ['ini', 'json']])(
+  ['json', 'tree'], ['json', 'plain'], ['json', 'json'],
+  ['yml', 'tree'], ['yml', 'plain'], ['yml', 'json'],
+  ['ini', 'tree'], ['ini', 'plain'], ['ini', 'json']])(
   'Comparison of .%s files. Output to "%s" format',
   (exp, format = '') => {
     const capitalizeFormat = _.capitalize(format);

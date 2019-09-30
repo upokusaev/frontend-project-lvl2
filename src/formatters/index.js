@@ -1,4 +1,4 @@
-import renderCustomString from './renderCustomString';
+import renderTree from './renderTree';
 import renderJson from './renderJson';
 import renderPlain from './renderPlain';
 
@@ -9,7 +9,7 @@ const geRenderFunction = (format) => {
     case 'json':
       return renderJson;
     default:
-      return renderCustomString;
+      return renderTree;
   }
 };
 
