@@ -8,8 +8,8 @@ const expandValue = (value) => {
 };
 
 const getValue = (obj) => {
-  if (obj.type === 'updated') return `"value": ${expandValue(obj.value)}, "oldValue": ${expandValue(obj.oldValue)} `;
-  const value = (obj.type === 'removed') ? obj.oldValue : obj.value;
+  if (obj.type === 'updated') return `"newValue": ${expandValue(obj.newValue)}, "oldValue": ${expandValue(obj.oldValue)} `;
+  const value = (obj.type === 'removed') ? obj.oldValue : obj.newValue;
   return `"value": ${expandValue(value)}`;
 };
 
@@ -18,9 +18,8 @@ const render = (diff) => {
     const obj = diff[key];
     const name = `"name": "${obj.name}"`;
     const type = `"type": "${obj.type}"`;
-    const value = getValue(obj);
-    const children = (obj.children) ? `"children": ${render(obj.children)}` : '"children": ""';
-    return (obj.children) ? `{ ${name}, ${type}, ${value}, ${children} }` : `{ ${name}, ${type}, ${children}, ${value} }`;
+    const content = (obj.type === 'nested') ? `"children": ${render(obj.children)}` : getValue(obj);
+    return `{ ${name}, ${type}, ${content} }`;
   });
   return `[${res.join(',')}]`;
 };

@@ -27,13 +27,13 @@ const render = (diff, level = 0) => {
     const startStr = `${tab.repeat(level)}${prefix}${obj.name}: `;
     if (obj.type === 'nested') return `${startStr}${render(obj.children, level + 1)}`;
     if (obj.type === 'updated') {
-      const arrValues = [obj.value, obj.oldValue];
-      const arrStr = arrValues.map((value, i) => `${tab.repeat(level)}${prefix[i]}${obj.name}: ${getValue(value, level)}`);
+      const arrValues = [obj.newValue, obj.oldValue];
+      const arrStr = arrValues.map((newValue, i) => `${tab.repeat(level)}${prefix[i]}${obj.name}: ${getValue(newValue, level)}`);
       return _.reverse(arrStr).join('\n');
     }
     if (obj.type === 'removed') return `${startStr}${getValue(obj.oldValue, level, prefix)}`;
-    if (obj.type === 'added') return `${startStr}${getValue(obj.value, level, prefix)}`;
-    return `${startStr}${getValue(obj.value, level, prefix)}`;
+    if (obj.type === 'added') return `${startStr}${getValue(obj.newValue, level, prefix)}`;
+    return `${startStr}${getValue(obj.newValue, level, prefix)}`;
   });
 
   return `{\n${res.join('\n')}\n${tab.repeat(level)}}`;

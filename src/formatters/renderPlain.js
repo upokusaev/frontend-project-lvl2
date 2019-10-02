@@ -7,8 +7,10 @@ const render = (diff, deepName) => {
   const res = diff.reduce((acc, obj) => {
     const name = (deepName) ? `${deepName}.${obj.name}` : obj.name;
     if (obj.type === 'nested') return `${acc}${render(obj.children, name)}`;
-    if (obj.type === 'updated') return `${acc}Property '${name}' was ${obj.type}. From ${stringify(obj.oldValue)} to ${stringify(obj.value)}\n`;
-    if (obj.type === 'added') return `${acc}Property '${name}' was ${obj.type} with value: ${stringify(obj.value)}\n`;
+    if (obj.type === 'updated') {
+      return `${acc}Property '${name}' was ${obj.type}. From ${stringify(obj.oldValue)} to ${stringify(obj.newValue)}\n`;
+    }
+    if (obj.type === 'added') return `${acc}Property '${name}' was ${obj.type} with value: ${stringify(obj.newValue)}\n`;
     return (obj.type === 'removed') ? `${acc}Property '${name}' was ${obj.type}\n` : acc;
   }, '');
 
