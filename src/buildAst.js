@@ -6,27 +6,27 @@ const objOfTypes = [
   {
     type: 'nested',
     check: (obj1, obj2, key) => isTwoObj(obj1[key], obj2[key]),
-    getContent: (obj1, obj2, key) => [obj1[key], obj2[key]],
+    getContent: (obj1, obj2, key, build) => ({ children: build(obj1[key], obj2[key]) }),
   },
   {
     type: 'unchanged',
     check: (obj1, obj2, key) => (obj1[key] === obj2[key]),
-    getContent: (obj1, obj2, key) => [obj1[key], null],
+    getContent: (obj1, obj2, key) => ({ newValue: obj1[key], oldValue: null }),
   },
   {
     type: 'removed',
     check: (obj1, obj2, key) => (_.has(obj1, key) && !_.has(obj2, key)),
-    getContent: (obj1, obj2, key) => [null, obj1[key]],
+    getContent: (obj1, obj2, key) => ({ newValue: null, oldValue: obj1[key] }),
   },
   {
     type: 'added',
     check: (obj1, obj2, key) => (!_.has(obj1, key) && _.has(obj2, key)),
-    getContent: (obj1, obj2, key) => [obj2[key], null],
+    getContent: (obj1, obj2, key) => ({ newValue: obj2[key], oldValue: null }),
   },
   {
     type: 'updated',
     check: (obj1, obj2, key) => (obj1[key] !== obj2[key]),
-    getContent: (obj1, obj2, key) => [obj2[key], obj1[key]],
+    getContent: (obj1, obj2, key) => ({ newValue: obj2[key], oldValue: obj1[key] }),
   },
 ];
 
@@ -37,14 +37,8 @@ const buildAst = (objBefore, objAfter) => {
   const ast = keys.map((key) => {
     const name = key;
     const { type, getContent } = getObjType(objBefore, objAfter, key);
-    const [content1, content2] = getContent(objBefore, objAfter, key);
-    const children = (type === 'nested') ? buildAst(content1, content2) : null;
-    const [newValue, oldValue] = (type === 'nested') ? [null, null] : [content1, content2];
-    return (children === null) ? {
-      name, type, newValue, oldValue,
-    } : {
-      name, type, children,
-    };
+    const content = getContent(objBefore, objAfter, key, buildAst);
+    return { name, type, ...content };
   });
   return ast;
 };
