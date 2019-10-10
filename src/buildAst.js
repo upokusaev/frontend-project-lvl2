@@ -1,11 +1,9 @@
 import _ from 'lodash';
 
-const isTwoObj = (obj1, obj2) => (_.isObject(obj1) && _.isObject(obj2));
-
 const objOfTypes = [
   {
     type: 'nested',
-    check: (obj1, obj2, key) => isTwoObj(obj1[key], obj2[key]),
+    check: (obj1, obj2, key) => (_.isObject(obj1[key]) && _.isObject(obj2[key])),
     getContent: (obj1, obj2, key, build) => ({ children: build(obj1[key], obj2[key]) }),
   },
   {
