@@ -1,15 +1,13 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const functions = {
+const parsers = {
   '.json': JSON.parse,
   '.yml': yaml.load,
   '.ini': ini.parse,
 };
 
-const parse = (data, ext) => {
-  const parseFunc = functions[ext];
-  return parseFunc(data);
+export default (data, ext) => {
+  const parse = parsers[ext];
+  return parse(data);
 };
-
-export default parse;
