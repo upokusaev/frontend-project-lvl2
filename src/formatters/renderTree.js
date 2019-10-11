@@ -1,44 +1,48 @@
-import _ from 'lodash';
+import { normalizeResult } from '../tools';
 
+const tab = '    ';
 const getPrefix = (obj) => {
   switch (obj.type) {
     case 'removed': return '  - ';
     case 'added': return '  + ';
-    case 'updated': return ['  + ', '  - '];
+    case 'updated': return ['  - ', '  + '];
     default: return '    ';
   }
 };
 
-const tab = '    ';
-
-const expandValue = (obj, level) => {
-  const res = Object.keys(obj).map((key) => `${tab.repeat(level + 1)}${key}: ${obj[key]}`);
-  return `{\n${res.join('\n')}\n${tab.repeat(level)}}`;
+const expandValue = (obj, depth) => {
+  const res = Object.keys(obj).map((key) => `${tab.repeat(depth + 1)}${key}: ${obj[key]}`);
+  return `{\n${res.join('\n')}\n${tab.repeat(depth)}}`;
 };
 
-const getValue = (value, level) => {
-  if (value instanceof Object) return expandValue(value, level + 1);
+const getValue = (value, depth) => {
+  if (value instanceof Object) return expandValue(value, depth + 1);
   return value;
 };
 
-const render = (diff, level = 0) => {
-  const res = diff.map((obj) => {
+const render = (diff, depth = 0) => {
+  const res = diff.reduce((acc, obj) => {
     const prefix = getPrefix(obj);
-    const startStr = `${tab.repeat(level)}${prefix}${obj.name}: `;
-    if (obj.type === 'nested') return `${startStr}${render(obj.children, level + 1)}`;
-    if (obj.type === 'updated') {
-      const arrValues = [obj.newValue, obj.oldValue];
-      const arrStr = arrValues.map((newValue, i) => `${tab.repeat(level)}${prefix[i]}${obj.name}: ${getValue(newValue, level)}`);
-      return _.reverse(arrStr).join('\n');
+    const name = `${tab.repeat(depth)}${prefix}${obj.name}: `;
+    switch (obj.type) {
+      case 'nested':
+        return [...acc, `${name}${render(obj.children, depth + 1)}`];
+      case 'updated': {
+        return [...acc,
+          `${tab.repeat(depth)}${prefix[0]}${obj.name}: ${getValue(obj.oldValue, depth)}`,
+          `${tab.repeat(depth)}${prefix[1]}${obj.name}: ${getValue(obj.newValue, depth)}`];
+      }
+      case 'removed':
+        return [...acc, `${name}${getValue(obj.oldValue, depth)}`];
+      default:
+        return [...acc, `${name}${getValue(obj.newValue, depth)}`];
     }
-    if (obj.type === 'removed') return `${startStr}${getValue(obj.oldValue, level, prefix)}`;
-    if (obj.type === 'added') return `${startStr}${getValue(obj.newValue, level, prefix)}`;
-    return `${startStr}${getValue(obj.newValue, level, prefix)}`;
-  });
+  }, []);
 
-  return `{\n${res.join('\n')}\n${tab.repeat(level)}}`;
+  return `{\n${res.join('\n')}\n${tab.repeat(depth)}}`;
 };
 
-const normalizeRezult = (diff) => `${render(diff)}\n`;
-
-export default normalizeRezult;
+export default (diff) => {
+  const str = render(diff);
+  return normalizeResult(str);
+};

@@ -1,5 +1,8 @@
-const render = (diff) => JSON.stringify(diff);
+import { normalizeResult } from '../tools';
 
-const normalizeResult = (diff) => `${render(diff)}\n`;
+const render = (diff) => {
+  const str = JSON.stringify(diff);
+  return normalizeResult(str);
+};
 
-export default normalizeResult;
+export default render;
