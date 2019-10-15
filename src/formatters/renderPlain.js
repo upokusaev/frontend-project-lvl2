@@ -8,28 +8,22 @@ const stringify = (value) => {
 const render = (diff, deepName) => {
   const deepResult = diff.map((obj) => {
     const name = (deepName) ? `${deepName}.${obj.name}` : obj.name;
-    let str = '';
     switch (obj.type) {
       case 'nested':
-        str = render(obj.children, name);
-        break;
+        return render(obj.children, name);
       case 'updated':
-        str = `Property '${name}' was ${obj.type}. From ${stringify(obj.oldValue)} to ${stringify(obj.newValue)}`;
-        break;
+        return `Property '${name}' was ${obj.type}. From ${stringify(obj.oldValue)} to ${stringify(obj.newValue)}`;
       case 'added':
-        str = `Property '${name}' was ${obj.type} with value: ${stringify(obj.newValue)}`;
-        break;
+        return `Property '${name}' was ${obj.type} with value: ${stringify(obj.newValue)}`;
       case 'removed':
-        str = `Property '${name}' was ${obj.type}`;
-        break;
+        return `Property '${name}' was ${obj.type}`;
       case 'unchanged':
-        str = null;
-        break;
+        return null;
       default:
-        console.log('Error');
+        return new Error('Wrong type');
     }
-    return str;
   }).filter((el) => el);
+
   const result = _.flattenDeep(deepResult);
   return result;
 };

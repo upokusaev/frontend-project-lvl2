@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 const tab = '    ';
 const getPrefix = (obj) => {
   switch (obj.type) {
@@ -19,25 +21,30 @@ const getValue = (value, depth) => {
 };
 
 const render = (diff, depth = 0) => {
-  const res = diff.reduce((acc, obj) => {
+  const deepResult = diff.map((obj) => {
     const prefix = getPrefix(obj);
     const name = `${tab.repeat(depth)}${prefix}${obj.name}: `;
     switch (obj.type) {
       case 'nested':
-        return [...acc, `${name}${render(obj.children, depth + 1)}`];
+        return `${name}${render(obj.children, depth + 1)}`;
       case 'updated': {
-        return [...acc,
+        return [
           `${tab.repeat(depth)}${prefix[0]}${obj.name}: ${getValue(obj.oldValue, depth)}`,
           `${tab.repeat(depth)}${prefix[1]}${obj.name}: ${getValue(obj.newValue, depth)}`];
       }
       case 'removed':
-        return [...acc, `${name}${getValue(obj.oldValue, depth)}`];
+        return `${name}${getValue(obj.oldValue, depth)}`;
+      case 'added':
+        return `${name}${getValue(obj.newValue, depth)}`;
+      case 'unchanged':
+        return `${name}${getValue(obj.newValue, depth)}`;
       default:
-        return [...acc, `${name}${getValue(obj.newValue, depth)}`];
+        return new Error('Wrong type');
     }
-  }, []);
+  });
 
-  return `{\n${res.join('\n')}\n${tab.repeat(depth)}}`;
+  const result = _.flattenDeep(deepResult);
+  return `{\n${result.join('\n')}\n${tab.repeat(depth)}}`;
 };
 
 export default render;
