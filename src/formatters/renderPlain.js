@@ -1,24 +1,36 @@
+import _ from 'lodash';
+
 const stringify = (value) => {
   if (value instanceof Object) return '[complex value]';
   return (typeof value === 'string') ? `'${value}'` : value;
 };
 
 const render = (diff, deepName) => {
-  const result = diff.reduce((acc, obj) => {
+  const deepResult = diff.map((obj) => {
     const name = (deepName) ? `${deepName}.${obj.name}` : obj.name;
+    let str = '';
     switch (obj.type) {
       case 'nested':
-        return [...acc, ...render(obj.children, name)];
+        str = render(obj.children, name);
+        break;
       case 'updated':
-        return [...acc, `Property '${name}' was ${obj.type}. From ${stringify(obj.oldValue)} to ${stringify(obj.newValue)}`];
+        str = `Property '${name}' was ${obj.type}. From ${stringify(obj.oldValue)} to ${stringify(obj.newValue)}`;
+        break;
       case 'added':
-        return [...acc, `Property '${name}' was ${obj.type} with value: ${stringify(obj.newValue)}`];
+        str = `Property '${name}' was ${obj.type} with value: ${stringify(obj.newValue)}`;
+        break;
       case 'removed':
-        return [...acc, `Property '${name}' was ${obj.type}`];
+        str = `Property '${name}' was ${obj.type}`;
+        break;
+      case 'unchanged':
+        str = null;
+        break;
       default:
-        return acc;
+        console.log('Error');
     }
-  }, []);
+    return str;
+  }).filter((el) => el);
+  const result = _.flattenDeep(deepResult);
   return result;
 };
 
