@@ -1,12 +1,10 @@
-import { normalizeResult } from '../tools';
-
 const stringify = (value) => {
   if (value instanceof Object) return '[complex value]';
   return (typeof value === 'string') ? `'${value}'` : value;
 };
 
 const render = (diff, deepName) => {
-  const resArr = diff.reduce((acc, obj) => {
+  const result = diff.reduce((acc, obj) => {
     const name = (deepName) ? `${deepName}.${obj.name}` : obj.name;
     switch (obj.type) {
       case 'nested':
@@ -21,11 +19,7 @@ const render = (diff, deepName) => {
         return acc;
     }
   }, []);
-  return resArr;
+  return result;
 };
 
-export default (diff) => {
-  const resArr = render(diff);
-  const str = resArr.join('\n');
-  return normalizeResult(str);
-};
+export default (diff) => render(diff).join('\n');

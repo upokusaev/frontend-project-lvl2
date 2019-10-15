@@ -1,5 +1,3 @@
-import { normalizeResult } from '../tools';
-
 const tab = '    ';
 const getPrefix = (obj) => {
   switch (obj.type) {
@@ -42,7 +40,4 @@ const render = (diff, depth = 0) => {
   return `{\n${res.join('\n')}\n${tab.repeat(depth)}}`;
 };
 
-export default (diff) => {
-  const str = render(diff);
-  return normalizeResult(str);
-};
+export default render;

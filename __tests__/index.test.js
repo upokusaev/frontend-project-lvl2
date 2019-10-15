@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 import genDiff from '../src';
+import { normalizeResult } from '../src/tools';
 
 const path = `${__dirname}/__fixtures__`;
 
@@ -13,7 +14,8 @@ test.each([
     const capitalizeFormat = _.capitalize(format);
     const before = `${path}/before.${exp}`;
     const after = `${path}/after.${exp}`;
+    const received = normalizeResult(genDiff(before, after, format));
     const expected = fs.readFileSync(`${path}/result${capitalizeFormat}`, 'utf-8');
-    expect(genDiff(before, after, format)).toBe(expected);
+    expect(received).toBe(expected);
   },
 );
