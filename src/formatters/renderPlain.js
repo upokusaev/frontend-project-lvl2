@@ -20,7 +20,7 @@ const render = (diff, deepName) => {
       case 'unchanged':
         return null;
       default:
-        return new Error('Wrong type');
+        throw new Error(`Error: unexpected type "${obj.type}"`);
     }
   }).filter((el) => el);
 

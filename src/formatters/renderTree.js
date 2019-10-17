@@ -39,7 +39,7 @@ const render = (diff, depth = 0) => {
       case 'unchanged':
         return `${name}${getValue(obj.newValue, depth)}`;
       default:
-        return new Error('Wrong type');
+        throw new Error(`Error: unexpected type "${obj.type}"`);
     }
   });
 
