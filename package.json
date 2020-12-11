@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "commander": "^3.0.1",
-    "ini": "^1.3.5",
+    "ini": "^1.3.6",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.19",
     "source-map-support": "^0.5.13"
